@@ -1,0 +1,287 @@
+openapi: 3.0.0
+info:
+  version: '1'
+  title: Test Library
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /books:
+    get:
+      summary: 'Sample endpoint: Returns list of book'
+      tags:
+        - book
+      responses:
+        '200':
+          description: 'Sample response: Book list'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookList'
+        default:
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyRespons'
+    post:
+      summary: 'Sample endpoint: Book creation'
+      tags:
+        - book
+      requestBody:
+        description: Callback payload
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/BookCreationPayload'
+      responses:
+        '200':
+          description: 'Sample response: Data with created book ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCreation'
+        '400':
+          description: Validation errors
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Some internal errors
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Error'
+  /books/{bookId}:
+    get:
+      summary: 'Sample endpoint: Returns details of book'
+      tags:
+        - book
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: 'Sample response: Book details'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetails'
+        default:
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyRespons'
+    put:
+      summary: 'Sample endpoint: Book editing'
+      tags:
+        - book
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        description: Callback payload
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/BookCreationPayload'
+      responses:
+        '200':
+          description: 'Sample response: Returns empty data'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyRespons'
+        '400':
+          description: Validation errors
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Some internal errors
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Error'
+  /authors:
+    post:
+      summary: 'Sample endpoint: Author creation'
+      tags:
+        - author
+      requestBody:
+        description: Callback payload
+        content:
+          'application/json':
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: "Крис Ричардсон"
+      responses:
+        '200':
+          description: 'Sample response: Data with created book ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCreation'
+        '400':
+          description: Validation errors
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Some internal errors
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Error'
+  /authors/{authorId}/books:
+    get:
+      summary: 'Sample endpoint: Book list by author'
+      tags:
+        - author
+        - book
+      parameters:
+        - name: authorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: 'Sample response: Book list by author'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookList'
+        default:
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyRespons'
+components:
+  schemas:
+    BookList:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: "Отверженные"
+              authors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "Виктор Мари Гюго"
+                    id:
+                      type: integer
+                      example: 1
+    BookCreationPayload:
+      type: object
+      required:
+        - name
+        - authors
+      properties:
+        name:
+          type: string
+          example: "Человек, который смеётся"
+        authors:
+          type: array
+          items:
+            type: string
+            example: "Виктор Мари Гюго"
+    BookCreation:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 2
+    BookDetails:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "Отверженные"
+            authors:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Виктор Мари Гюго"
+                  id:
+                    type: integer
+                    example: 1
+    EmptyRespons:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          example: true
+    Error:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
