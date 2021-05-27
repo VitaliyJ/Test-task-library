@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class EditingService implements Service
 {
-    public const ERROR_MESSAGE_CAN_NOT_EDIT = 'Book editing error';
-
     private Book $book;
     private string $name;
     private array $authors;
@@ -64,7 +62,7 @@ class EditingService implements Service
             return;
         }
 
-        throw new StoreException(self::ERROR_MESSAGE_CAN_NOT_EDIT);
+        throw new StoreException(BookService::ERROR_MESSAGE_CAN_NOT_EDIT);
     }
 
     /**

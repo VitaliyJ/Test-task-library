@@ -10,6 +10,7 @@ class BookService
     public const ERROR_MESSAGE_BOOK_NOT_FOUND = 'Book not found';
     public const ERROR_MESSAGE_CAN_NOT_CREATE = 'Book creation error';
     public const ERROR_MESSAGE_CAN_NOT_CREATE_RELATIONS = 'Authors to book relations creation error';
+    public const ERROR_MESSAGE_CAN_NOT_EDIT = 'Book editing error';
 
     private function __construct() {}
 
