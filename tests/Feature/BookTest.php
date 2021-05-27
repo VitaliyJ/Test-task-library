@@ -25,9 +25,7 @@ class BookTest extends TestCase
 
     public function test_making_request_to_existent_book_details(): void
     {
-        $book = Book::factory()->make();
-        $book->save();
-
+        $book = $this->getBookRecord();
         $response = $this->getJson('/api/v1/books/' . $book->id);
 
         $response->assertStatus(200);
@@ -72,9 +70,7 @@ class BookTest extends TestCase
 
     public function test_making_request_to_editing_book_with_valid_params(): void
     {
-        $book = Book::factory()->make();
-        $book->save();
-
+        $book = $this->getBookRecord();
         $response = $this->putJson('/api/v1/books/' . $book->id, ['name' => 'test_book', 'authors' => ['test_author']]);
 
         $response->assertStatus(200);
@@ -83,12 +79,18 @@ class BookTest extends TestCase
 
     public function test_making_request_to_editing_book_with_invalid_params(): void
     {
-        $book = Book::factory()->make();
-        $book->save();
-
+        $book = $this->getBookRecord();
         $response = $this->putJson('/api/v1/books/' . $book->id, ['authors' => ['']]);
 
         $response->assertStatus(400);
         $this->assertFalse($response['success']);
+    }
+
+    private function getBookRecord(): Book
+    {
+        $book = Book::factory()->make();
+        $book->save();
+
+        return $book;
     }
 }
